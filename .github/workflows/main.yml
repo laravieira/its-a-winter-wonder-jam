@@ -11,7 +11,7 @@ jobs:
       matrix:
         include:
           - targetPlatform: StandaloneWindows64
-            os: windows-latest
+            os: windows-2019
           - targetPlatform: WebGL
             os: ubuntu-latest
     runs-on: ${{ matrix.os }}
@@ -63,4 +63,4 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: Build-${{ matrix.targetPlatform }}
-          path: build
+          path: build/${{ matrix.targetPlatform }}
