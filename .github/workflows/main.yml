@@ -6,13 +6,15 @@ on: [push, pull_request]
 jobs:
   build:
     name: Build game for ${{ matrix.targetPlatform }}
-    runs-on: windows-2019
     strategy:
       fail-fast: false
       matrix:
-        targetPlatform:
-          - StandaloneWindows64 # Build a Windows 64-bit standalone.
-          - WebGL # WebGL.
+        include:
+          - targetPlatform: StandaloneWindows64
+            os: windows-latest
+          - targetPlatform: WebGL
+            os: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       # Checkout (without LFS)
       - name: Checkout repository
@@ -61,4 +63,4 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: Build-${{ matrix.targetPlatform }}
-          path: build/${{ matrix.targetPlatform }}
+          path: build
