@@ -9,4 +9,4 @@ jobs:
       - name: Unity - Activate
         uses: game-ci/unity-activate@v2.0.0
         with:
-          unityVersion: 2020.2.1f1
+          unityVersion: 2022.2.1f1
