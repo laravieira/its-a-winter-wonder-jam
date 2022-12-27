@@ -15,7 +15,7 @@ public class Controller : MonoBehaviour
         rigidbody = this.GetComponent<Rigidbody2D>();
     }
 
-    void Update()
+    private void FixedUpdate()
     {
         float direction = Input.GetAxis("Horizontal");
 
@@ -26,7 +26,10 @@ public class Controller : MonoBehaviour
             if (Input.GetButton("Jump"))
                 rigidbody.velocity = new Vector2(rigidbody.velocity.x, jump_speed);
         }
+    }
 
+    void Update()
+    {
         if (Input.GetButton("Fire1"))
             CollapseClosest();
     }
@@ -57,7 +60,7 @@ public class Controller : MonoBehaviour
 
         foreach (var contact_point in contact_points)
         {
-            if (contact_point.normal.y > Mathf.Cos(3.14f / 6))              // 30 degrees
+            if (contact_point.normal.y > Mathf.Cos(3.14f / 4))              // 45 degrees
             {
                 grounds_set.Add(collision.otherCollider);
                 break;

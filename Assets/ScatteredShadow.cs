@@ -9,7 +9,7 @@ public class ScatteredShadow : MonoBehaviour
 
     public float collapse_speed = 1f;
 
-    private void Start()
+    private void Awake()
     {
         parent_scatter = transform.parent.GetComponent<Scattered>();
         sprite_renderer = GetComponent<SpriteRenderer>();

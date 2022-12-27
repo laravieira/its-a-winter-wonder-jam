@@ -84,6 +84,8 @@ public class Scattered : MonoBehaviour
                 rigidbody.isKinematic = false;
 
                 child.transform.parent = null;
+                child.gameObject.layer = 0;         // default
+                Destroy(child.GetComponent<ScatteredShadow>());
 
                 chosen = child.gameObject;
                 break;
