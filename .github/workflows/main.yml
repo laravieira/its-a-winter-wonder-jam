@@ -19,13 +19,16 @@ jobs:
       # Checkout (without LFS)
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          lfs: true
 
       # Git LFS
       - name: Create LFS file list
         run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
 
       - name: Restore LFS cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: lfs-cache
         with:
           path: .git/lfs
@@ -38,7 +41,7 @@ jobs:
           git reset --hard
 
       # Cache
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: Library
           key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -47,21 +50,23 @@ jobs:
             Library-
 
       # Build
-#      - name: Build project
-#        uses: game-ci/unity-builder@v2
-#        id: myBuildStep
-#        env:
-#          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-#          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-#          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-#        with:
-#          targetPlatform: ${{ matrix.targetPlatform }}
-#          versioning: Semantic
-#          unityVersion: 2020.2.1f1
+      - name: Build project
+        uses: game-ci/unity-builder@v2
+        id: myBuildStep
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+          versioning: Semantic
+          unityVersion: 2020.2.1f1
+
+      - run: dir build
+      - run: dir Build
 
       # Output
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: Build-${{ matrix.targetPlatform }}
-          path: build/${{ matrix.targetPlatform }}
-      - run: dir
+          path: ${{ github.workspace }}/build/${{ matrix.targetPlatform }}
