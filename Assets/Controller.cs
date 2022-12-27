@@ -7,17 +7,14 @@ public class Controller : MonoBehaviour
     public float move_speed = 5;
     public float jump_speed = 4;
     Rigidbody2D rigidbody;
-    Collider2D collider;
 
     HashSet<Collider2D> grounds_set = new HashSet<Collider2D>();
 
     void Start()
     {
         rigidbody = this.GetComponent<Rigidbody2D>();
-        collider = this.GetComponent<Collider2D>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         float direction = Input.GetAxis("Horizontal");
@@ -29,9 +26,31 @@ public class Controller : MonoBehaviour
             if (Input.GetButton("Jump"))
                 rigidbody.velocity = new Vector2(rigidbody.velocity.x, jump_speed);
         }
+
+        if (Input.GetButton("Fire1"))
+            CollapseClosest();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    void CollapseClosest()
+    {
+        float closest_distance_sqr = Mathf.Infinity;
+        Scattered closest = null;
+
+        foreach (var scattered in Scattered.scattereds)
+        {
+            float distance_sqr = (transform.position - scattered.transform.position).sqrMagnitude;
+            if (distance_sqr < closest_distance_sqr)
+            {
+                closest_distance_sqr = distance_sqr;
+                closest = scattered;
+            }
+        }
+
+        if (closest)
+            closest.Collapse();
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
     {
         List<ContactPoint2D> contact_points = new List<ContactPoint2D>();
         int number_of_contacts = collision.GetContacts(contact_points);
