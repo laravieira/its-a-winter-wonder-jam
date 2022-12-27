@@ -9,6 +9,8 @@ public class ScatteredShadow : MonoBehaviour
 
     public float collapse_speed = 1f;
 
+    HashSet<Collider2D> overlaped = new HashSet<Collider2D>();
+
     private void Awake()
     {
         parent_scatter = transform.parent.GetComponent<Scattered>();
@@ -39,12 +41,18 @@ public class ScatteredShadow : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        parent_scatter.active_children.Add(sprite_renderer);
-        parent_scatter.update_color = true;
+        overlaped.Remove(collision);
+        if (overlaped.Count == 0)
+        {
+            parent_scatter.active_children.Add(sprite_renderer);
+            parent_scatter.update_color = true;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        overlaped.Add(collision);
+
         parent_scatter.active_children.Remove(sprite_renderer);
         parent_scatter.update_color = true;
 
